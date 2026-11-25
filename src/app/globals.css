@@ -1491,10 +1491,16 @@ details[open] .faq-plus::after {
   font-size: 0.98rem;
 }
 
-@media (min-width: 760px) {
+@media (min-width: 620px) {
   .points {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
+  }
+}
+
+@media (min-width: 1040px) {
+  .points {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
