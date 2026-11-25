@@ -21,7 +21,7 @@ function motionOff() {
 
 /**
  * סרטון קצר בלי קול שמתנגן בלולאה.
- * נטען ומתחיל לנגן רק כשהוא נכנס למסך, ועוצר כשיוצאים ממנו.
+ * מתנגן אוטומטית כל עוד הוא על המסך, גם במובייל, ועוצר כשיוצאים ממנו.
  * יש כפתור עצירה, ומי שביקש "בלי אנימציות" רואה תמונה ומפעיל בעצמו.
  */
 export default function AutoVideo({ name, label, width, height, className }: Props) {
@@ -32,21 +32,48 @@ export default function AutoVideo({ name, label, width, height, className }: Pro
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
+    // דפדפני מובייל מנגנים אוטומטית רק סרטון מושתק, אז מוודאים את זה גם ברמת המאפיין
+    v.muted = true;
+    v.defaultMuted = true;
+    let visible = false;
+
+    const tryPlay = () => {
+      if (!visible || userPaused.current || motionOff()) return;
+      v.play().catch(() => {});
+    };
+
+    if (motionOff()) v.pause();
+
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) {
-          if (!userPaused.current && !motionOff()) v.play().catch(() => {});
-        } else {
-          v.pause();
-        }
+        visible = e.isIntersecting;
+        if (visible) tryPlay();
+        else v.pause();
       },
-      { threshold: 0.35 },
+      { threshold: 0.2 },
     );
     io.observe(v);
-    return () => io.disconnect();
+
+    // מצב חיסכון בסוללה חוסם ניגון אוטומטי: מנסים שוב בנגיעה הראשונה במסך ובחזרה לדף
+    const onGesture = () => {
+      if (v.paused) tryPlay();
+    };
+    const onVisibility = () => {
+      if (!document.hidden) tryPlay();
+    };
+    document.addEventListener("touchend", onGesture, { passive: true });
+    document.addEventListener("click", onGesture);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("touchend", onGesture);
+      document.removeEventListener("click", onGesture);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, []);
 
-  function toggle() {
+  function toggle(e: React.MouseEvent) {
+    e.stopPropagation();
     const v = ref.current;
     if (!v) return;
     if (v.paused) {
@@ -66,10 +93,11 @@ export default function AutoVideo({ name, label, width, height, className }: Pro
         poster={`/video/${name}.webp`}
         width={width}
         height={height}
+        autoPlay
         muted
         loop
         playsInline
-        preload="none"
+        preload="metadata"
         aria-label={label}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
