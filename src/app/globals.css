@@ -205,6 +205,21 @@ bdi {
   font-size: 0.975rem;
 }
 
+/* כפתור הוואטסאפ בסרגל: מוסתר עד שגוללים מעבר לכפתור שבהירו */
+.top-cta {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0.25s;
+}
+
+.top-cta.is-on {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s;
+}
+
 .btn-lg {
   min-height: 3.75rem;
   padding-inline: 2.1rem;

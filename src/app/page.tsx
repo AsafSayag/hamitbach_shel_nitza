@@ -1,6 +1,7 @@
 import AutoVideo from "@/components/AutoVideo";
 import A11yWidget from "@/components/A11yWidget";
 import EventsTop from "@/components/EventsTop";
+import HeaderCta from "@/components/HeaderCta";
 import Legal from "@/components/Legal";
 import Menu from "@/components/Menu";
 import { FactIcon, Heart, InstagramIcon, WhatsAppIcon } from "@/components/Icons";
@@ -30,10 +31,10 @@ export default function Home() {
               </a>
             ))}
           </nav>
-          <a className="btn btn-primary btn-sm" href={WA.general} target="_blank" rel="noopener">
+          <HeaderCta href={WA.general} watch="hero-wa">
             <WhatsAppIcon className="ico" />
             <span>להזמנה</span>
-          </a>
+          </HeaderCta>
         </div>
       </header>
 
@@ -46,7 +47,7 @@ export default function Home() {
               <h1 className="h1">{HERO.title}</h1>
               <p className="lead">{HERO.text}</p>
               <div className="hero-cta">
-                <a className="btn btn-primary" href={WA.general} target="_blank" rel="noopener">
+                <a id="hero-wa" className="btn btn-primary" href={WA.general} target="_blank" rel="noopener">
                   <WhatsAppIcon className="ico" />
                   להזמנה בוואטסאפ
                 </a>
