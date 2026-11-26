@@ -36,6 +36,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#fdf6f1",
+  // The site has only a light design: stop phone browsers from forcing a dark version.
+  colorScheme: "only light",
 };
 
 const jsonLd = {
@@ -60,7 +62,12 @@ const jsonLd = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="he" dir="rtl" className={`${display.variable} ${body.variable}`}>
+    <html
+      lang="he"
+      dir="rtl"
+      className={`${display.variable} ${body.variable}`}
+      style={{ colorScheme: "only light" }}
+    >
       <body>
         {children}
         <script
