@@ -1745,8 +1745,20 @@ details[open] .faq-plus::after {
 
 @media (min-width: 760px) {
   .quotes {
-    grid-template-columns: 1.4fr 1fr;
-    align-items: start;
+    display: block;
+    columns: 2;
+    column-gap: 1rem;
+  }
+
+  .quotes li {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 1080px) {
+  .quotes {
+    columns: 3;
   }
 }
 
